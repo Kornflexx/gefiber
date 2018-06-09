@@ -1,10 +1,8 @@
 
 # gefiber
 
-
-
 Gefiber is an simple helper that allow to pipe and compose generator.
-
+It is tiny (~0.76kB).
 
 ## createFiber
 

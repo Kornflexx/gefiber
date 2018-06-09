@@ -1,12 +1,12 @@
 
 export const BREAK_FIBER_CHAIN = 'BREAK_FIBER_CHAIN'
 
-export default (...initialFibers) => {
-  const queue = initialFibers.reduce((acc, initialFiber) => [
-    [...acc[0], ...initialFiber._queue[0]],
-    [...acc[1], ...initialFiber._queue[1]],
-    [...acc[2], ...initialFiber._queue[2]],
-    [...acc[3], ...initialFiber._queue[3]],
+export default function (...initialFibers) {
+  const queues = initialFibers.reduce((acc, initialFiber) => [
+    acc[0].concat(initialFiber._queues[0]),
+    acc[1].concat(initialFiber._queues[1]),
+    acc[2].concat(initialFiber._queues[2]),
+    acc[3].concat(initialFiber._queues[3]),
   ], [
     [],
     [],
@@ -17,44 +17,40 @@ export default (...initialFibers) => {
   function* worker(...args) {
     let result
     try {
-      for (const beforeFiber of queue[0]) {
-        result = yield* beforeFiber(...args, result)
-        if (result === BREAK_FIBER_CHAIN) return
-      }
-      for (const stepFiber of queue[1]) {
-        result = yield* stepFiber(...args, result)
-        if (result === BREAK_FIBER_CHAIN) return
-      }
-      for (const afterFiber of queue[2]) {
-        result = yield* afterFiber(...args, result)
-        if (result === BREAK_FIBER_CHAIN) return
+      for (let i = 0; i < 3; i += 1) {
+        for (let j = 0; j < queues[i].length; j += 1) {
+          result = yield* queues[i][j](...args, result)
+          if (result === BREAK_FIBER_CHAIN) return
+        }
       }
     } catch (exception) {
-      for (const catchFiber of queue[3]) {
-        result = yield* catchFiber(exception, ...args, result)
+      for (let i = 0; i < queues[3].length; i += 1) {
+        result = yield* queues[3][i](...args, result)
         if (result === BREAK_FIBER_CHAIN) return
       }
     }
   }
 
-  const addFiber = type => (generator) => {
-    queue[type].push(generator)
+  function makeAddFiber(type) {
+    return function addFiber(generator) {
+      queues[type].push(generator)
+      return worker
+    }
+  }
+
+  function chain(fiber) {
+    queues[0] = queues[0].concat(fiber._queue[0])
+    queues[1] = queues[1].concat(fiber._queue[1])
+    queues[2] = queues[2].concat(fiber._queue[2])
+    queues[3] = queues[3].concat(fiber._queue[3])
     return worker
   }
 
-  const chain = (fiber) => {
-    queue[0] = queue[0].concat(fiber._queue[0])
-    queue[1] = queue[1].concat(fiber._queue[1])
-    queue[2] = queue[2].concat(fiber._queue[2])
-    queue[3] = queue[3].concat(fiber._queue[3])
-    return worker
-  }
-
-  worker._queue = queue
-  worker.before = addFiber(0)
-  worker.step = addFiber(1)
-  worker.after = addFiber(2)
-  worker.catch = addFiber(3)
+  worker._queues = queues
+  worker.before = makeAddFiber(0)
+  worker.step = makeAddFiber(1)
+  worker.after = makeAddFiber(2)
+  worker.catch = makeAddFiber(3)
   worker.chain = chain
   return worker
 }
