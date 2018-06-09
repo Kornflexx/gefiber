@@ -25,7 +25,7 @@ export default function (...initialFibers) {
       }
     } catch (exception) {
       for (let i = 0; i < queues[3].length; i += 1) {
-        result = yield* queues[3][i](...args, result)
+        result = yield* queues[3][i](exception, ...args, result)
         if (result === BREAK_FIBER_CHAIN) return
       }
     }
