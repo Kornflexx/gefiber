@@ -22,6 +22,7 @@ Gefiber is an simple helper that allow to pipe and compose generator.
 |step|generator:[Generator]|self:[Fiber:Generator]|add generator to second called queue
 |after|generator:[Generator]|self:[Fiber:Generator]|add generator to third  called queue
 |catch|catchGenerator:[Generator]|self:[Fiber:Generator]|add generator to a queue entirely called when an exception is thrown into previous queues
+|chain|fibers:[Fiber:Generator]|self:[Fiber:Generator]|merge itself with fibers
 
 
 generator : `function* (...args, result)`

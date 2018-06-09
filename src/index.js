@@ -42,10 +42,19 @@ export default (...initialFibers) => {
     return worker
   }
 
+  const chain = (fiber) => {
+    queue[0] = queue[0].concat(fiber._queue[0])
+    queue[1] = queue[1].concat(fiber._queue[1])
+    queue[2] = queue[2].concat(fiber._queue[2])
+    queue[3] = queue[3].concat(fiber._queue[3])
+    return worker
+  }
+
   worker._queue = queue
   worker.before = addFiber(0)
   worker.step = addFiber(1)
   worker.after = addFiber(2)
   worker.catch = addFiber(3)
+  worker.chain = chain
   return worker
 }
