@@ -8,6 +8,7 @@ It is tiny (~0.76kB).
 
 ### createFiber ⇒ [<code>Fiber</code>](#Fiber)
 **Kind**: default export
+
 | Param | Type | Description |
 | --- | --- | --- |
 | initialFibers | <code>...Fiber</code> | Fiber to merge with. |
