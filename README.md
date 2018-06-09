@@ -11,7 +11,7 @@ It is tiny (~0.76kB).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| initialFibers | <code>...Fiber</code> | Fiber to merge with. |
+| initialFibers | <code>...Fiber</code> | Fibers to merge with. |
 ## Typedefs
 
 <a name="ChainingFunction"></a>
