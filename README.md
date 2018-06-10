@@ -14,11 +14,11 @@ It is tiny (~0.76kB).
 | initialFibers | <code>...Fiber</code> | Fibers to merge with. |
 ## Typedefs
 
-<a name="ChainingFunction"></a>
+<a name="MergingFunction"></a>
 
-### ChainingFunction ⇒ [<code>Fiber</code>](#Fiber)
+### MergingFunction ⇒ [<code>Fiber</code>](#Fiber)
 **Kind**: global typedef
-**Returns**: [<code>Fiber</code>](#Fiber) - - Current Fiber.
+**Returns**: [<code>Fiber</code>](#Fiber) Current Fiber.
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -32,11 +32,11 @@ It is tiny (~0.76kB).
 
 | Name | Type | Description |
 | --- | --- | --- |
-| before | [<code>ChainingFunction</code>](#ChainingFunction) | Add Generator to the before queue. |
-| step | [<code>ChainingFunction</code>](#ChainingFunction) | Add Generator to the step queue. |
-| after | [<code>ChainingFunction</code>](#ChainingFunction) | Add Generator to the befafterore queue. |
-| after | [<code>ChainingFunction</code>](#ChainingFunction) | Add Generator to the after queue. |
-| chain | [<code>ChainingFunction</code>](#ChainingFunction) | Merge Fibers with itself. |
+| before | [<code>MergingFunction</code>](#MergingFunction) | Add Generator to the before queue. |
+| step | [<code>MergingFunction</code>](#MergingFunction) | Add Generator to the step queue. |
+| after | [<code>MergingFunction</code>](#MergingFunction) | Add Generator to the after queue. |
+| catch | [<code>MergingFunction</code>](#MergingFunction) | Add Generator to the catch queue. |
+| merge | [<code>MergingFunction</code>](#MergingFunction) | Merge Fibers with itself. |
 
 ## Composition example with redux-saga
 
