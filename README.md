@@ -14,15 +14,25 @@ It is tiny (~0.76kB).
 | initialFibers | <code>...Fiber</code> | Fibers to merge with. |
 ## Typedefs
 
-<a name="MergingFunction"></a>
+<a name="ChainingFunction"></a>
 
-### MergingFunction ⇒ [<code>Fiber</code>](#Fiber)
+### ChainingFunction ⇒ [<code>Fiber</code>](#Fiber)
 **Kind**: global typedef
 **Returns**: [<code>Fiber</code>](#Fiber) Current Fiber.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| Generator | <code>Generator</code> | Generator to add to the concerned queue. |
+| generator | <code>Generator</code> | Generator to add to the concerned queue. |
+
+<a name="ChainingMergingFunction"></a>
+
+### ChainingMergingFunction ⇒ [<code>Fiber</code>](#Fiber)
+**Kind**: global typedef
+**Returns**: [<code>Fiber</code>](#Fiber) Current Fiber.
+
+| Param | Type | Description |
+| --- | --- | --- |
+| generator | <code>...Fibers</code> | Fibbers  to merge with. |
 
 <a name="Fiber"></a>
 
@@ -32,11 +42,11 @@ It is tiny (~0.76kB).
 
 | Name | Type | Description |
 | --- | --- | --- |
-| before | [<code>MergingFunction</code>](#MergingFunction) | Add Generator to the before queue. |
-| step | [<code>MergingFunction</code>](#MergingFunction) | Add Generator to the step queue. |
-| after | [<code>MergingFunction</code>](#MergingFunction) | Add Generator to the after queue. |
-| catch | [<code>MergingFunction</code>](#MergingFunction) | Add Generator to the catch queue. |
-| merge | [<code>MergingFunction</code>](#MergingFunction) | Merge Fibers with itself. |
+| before | [<code>ChainingFunction</code>](#ChainingFunction) | Add Generator to the before queue. |
+| step | [<code>ChainingFunction</code>](#ChainingFunction) | Add Generator to the step queue. |
+| after | [<code>ChainingFunction</code>](#ChainingFunction) | Add Generator to the after queue. |
+| catch | [<code>ChainingFunction</code>](#ChainingFunction) | Add Generator to the catch queue. |
+| merge | [<code>ChainingMergingFunction</code>](#ChainingMergingFunction) | Merge Fibers with the current fiber. |
 
 ## Composition example with redux-saga
 
@@ -63,28 +73,26 @@ const toastErrorFiber = createFiber()
 		yield put({ type: 'SHOW_TOAST_ERROR', message: e })
 	})
 
-const authFiber = createFiber()
+const tokenSelectorFiber = createFiber()
 	.step(function* () {
 		const token = yield select(state => state.token)
 		if (!token) throw 'You have to be authenticated to have access to this feature'
 		return token
 	})
 
-export const getCatsSaga = createFiber(
+const baseApiFiber = createFiber(
 		loadingFiber,
 		toastErrorFiber,
-		authFiber
 	)
+	.chain(tokenSelectorFiber)
+
+export const getCatsSaga = createFiber(baseApiFiber)
 	.step(function* (action, token) {
 		const cats = yield call(catAPI.get, token)
 		yield put({ type: 'ADD_CATS', cats })
 	})
 
-export const getDogsSaga = createFiber(
-		loadingFiber,
-		toastErrorFiber,
-		authFiber
-	)
+export const getDogsSaga = createFiber(baseApiFiber)
 	.step(function* (action, token) {
 		const dogs = yield call(dogAPI.get, token)
 		yield put({ type: 'ADD_DOGS', dogs })
