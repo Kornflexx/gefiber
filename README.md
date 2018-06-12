@@ -53,7 +53,7 @@ It is tiny (~0.76kB).
 ```js
 
 import { call, put, select } from 'redux-saga/effects'
-import createFiber from 'gefiber'
+import { createFiber } from 'gefiber'
 
 ...
 

@@ -1,7 +1,7 @@
 
 export const BREAK_FIBER_CHAIN = 'BREAK_FIBER_CHAIN'
 
-export default function (...initialFibers) {
+export function createFiber(...initialFibers) {
   const queues = [[], [], [], []]
 
   function* worker(...args) {

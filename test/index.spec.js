@@ -1,4 +1,4 @@
-const createFiber = require('../src').default
+const { createFiber } = require('../src')
 
 describe('createFiber', () => {
   it('return a function (fiber)', () => {
