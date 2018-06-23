@@ -31,10 +31,10 @@ export function createFiber(...initialFibers) {
 
   function merge(...fibers) {
     for (let i = 0; i < fibers.length; i += 1) {
-      queues[0].concat(fibers[i]._queues[0])
-      queues[1].concat(fibers[i]._queues[1])
-      queues[2].concat(fibers[i]._queues[2])
-      queues[3].concat(fibers[i]._queues[3])
+      queues[0] = queues[0].concat(fibers[i]._queues[0])
+      queues[1] = queues[1].concat(fibers[i]._queues[1])
+      queues[2] = queues[2].concat(fibers[i]._queues[2])
+      queues[3] = queues[3].concat(fibers[i]._queues[3])
     }
     return worker
   }
